@@ -7,7 +7,7 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-bold">Ghibli Converter</h3>
           <p className="text-blue-200 text-sm">
-            © {new Date().getFullYear()} Ghibli Magic
+            © {new Date().getFullYear()} Ghibli at 59
           </p>
         </div>
         <div className="flex items-center">

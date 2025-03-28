@@ -44,7 +44,7 @@ export default function HeroSection() {
         <div className="md:w-1/2 space-y-6">
           <div className="flex items-center space-x-3 mb-4">
             <WandSparkles className="w-10 h-10 text-[#ff9800] animate-pulse" />
-            <span className="text-lg font-medium text-[#1a237e]">AI Image Transformation</span>
+            <span className="text-lg font-medium text-[#1a237e]">Ghiblify your Image</span>
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a237e] leading-tight">
             Anime Your Reality

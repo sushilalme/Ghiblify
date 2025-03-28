@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -24,6 +25,8 @@ interface User {
 export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
+  const [password, setPassword] = useState("")
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const fetchUsers = async () => {
     setLoading(true)
@@ -52,18 +55,27 @@ export default function AdminPage() {
     }
   }
 
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
-  const groupedUsers = users.reduce((acc, user) => {
-    const status = user.status
-    if (!acc[status]) acc[status] = []
-    acc[status].push(user)
-    return acc
-  }, {} as Record<string, User[]>)
-
-  const statusOrder = ["Pending", "Processed", "Rejected"]
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const response = await fetch("/api/ghibli-admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password })
+      })
+      
+      if (response.ok) {
+        setIsAuthenticated(true)
+        fetchUsers()
+      } else {
+        alert("Incorrect password")
+        setPassword("")
+      }
+    } catch (error) {
+      console.error("Authentication failed:", error)
+      alert("Authentication error")
+    }
+  }
 
   const downloadImage = async (imageUrl: string, fileName: string) => {
     try {
@@ -82,6 +94,31 @@ export default function AdminPage() {
     }
   }
 
+  // Password authentication screen
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-md rounded-lg">
+          <h2 className="text-2xl font-bold text-center text-gray-900">Admin Login</h2>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <Input 
+              type="password" 
+              placeholder="Enter admin password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full"
+              required
+            />
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -90,15 +127,33 @@ export default function AdminPage() {
     )
   }
 
+  // Main admin dashboard (rest of the previous code remains the same)
+  const groupedUsers = users.reduce((acc, user) => {
+    const status = user.status
+    if (!acc[status]) acc[status] = []
+    acc[status].push(user)
+    return acc
+  }, {} as Record<string, User[]>)
+
+  const statusOrder = ["Pending", "Processed", "Rejected"]
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <Button onClick={fetchUsers} className="flex items-center gap-2">
-            <RefreshCw className="w-4 h-4" />
-            Refresh
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={fetchUsers} className="flex items-center gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => setIsAuthenticated(false)}
+            >
+              Logout
+            </Button>
+          </div>
         </div>
 
         {statusOrder.map((status) => (

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, Mail, QrCode } from "lucide-react"
+import { Check, Info, Mail, QrCode } from "lucide-react"
 import QRCode from "react-qr-code"
 
 interface PaymentModalProps {
@@ -47,9 +47,9 @@ export default function PaymentModal({ isOpen, onClose, onSuccess }: PaymentModa
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-6 flex flex-col items-center">
-              <Mail className="w-12 h-12 text-[#ff9800] mb-4" />
+          <div className="space-y-4">
+            <div className="text-center mb-4 flex flex-col items-center">
+              <Mail className="w-12 h-12 text-[#ff9800] mb-2" />
               <h3 className="text-xl font-medium text-[#1a237e]">
                 Where Should We Send Your Ghibli Magic?
               </h3>
@@ -63,21 +63,20 @@ export default function PaymentModal({ isOpen, onClose, onSuccess }: PaymentModa
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-white/50 backdrop-blur-sm border-[#ff9800]/30 focus:border-[#ff9800]"
-              icon={<Mail className="text-[#ff9800]" />}
             />
           </div>
         )
 
       case 2:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-6 flex flex-col items-center">
-              <QrCode className="w-12 h-12 text-[#ff9800] mb-4" />
+          <div className="space-y-4">
+            <div className="text-center mb-4 flex flex-col items-center">
+              <QrCode className="w-12 h-12 text-[#ff9800] mb-2" />
               <h3 className="text-xl font-medium text-[#1a237e]">
                 Complete Your Payment
               </h3>
               <p className="text-sm text-gray-600 max-w-md mt-2">
-                Scan the QR code or enter your UPI ID to unlock the Ghibli transformation
+                Scan the QR code and enter your UPI ID to unlock the Ghibli transformation
               </p>
             </div>
 
@@ -85,7 +84,7 @@ export default function PaymentModal({ isOpen, onClose, onSuccess }: PaymentModa
               <QRCode value={UPI_LINK} size={200} />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Input
                 type="text"
                 placeholder="Enter your UPI ID"
@@ -96,6 +95,16 @@ export default function PaymentModal({ isOpen, onClose, onSuccess }: PaymentModa
               <p className="text-xs text-gray-500 text-center">
                 Example: yourname@upi
               </p>
+              <div className="flex flex-col items-center text-center mt-2 space-y-2">
+                <div className="flex justify-center items-center gap-1 text-sm text-[#ff9800] font-medium">
+                  {/* <Info className="w-5 h-5" /> */}
+                  <span>NOTE</span>
+                </div>
+                <p className="text-xs text-gray-600 max-w-md">
+                  Please ensure you <span className="font-semibold text-[#1a237e]">complete the payment</span> first by scanning the QR code.
+                  Then, provide your <span className="font-semibold text-[#1a237e]">UPI ID</span> to verify your payment. Both steps are mandatory to proceed.
+                </p>
+              </div>
             </div>
           </div>
         )
@@ -118,8 +127,8 @@ export default function PaymentModal({ isOpen, onClose, onSuccess }: PaymentModa
   }
 
   return (
-    <Dialog 
-      open={isOpen} 
+    <Dialog
+      open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
           resetModal()
@@ -130,10 +139,10 @@ export default function PaymentModal({ isOpen, onClose, onSuccess }: PaymentModa
       <DialogContent className="sm:max-w-md bg-gradient-to-br from-[#f3f4f6] to-[#e5e7eb] rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-[#1a237e]">
-            {step === 3 
-              ? "Payment Complete" 
-              : step === 2 
-                ? "Payment Details" 
+            {step === 3
+              ? "Payment Complete"
+              : step === 2
+                ? "Payment Details"
                 : "Contact Information"
             }
           </DialogTitle>
@@ -144,8 +153,8 @@ export default function PaymentModal({ isOpen, onClose, onSuccess }: PaymentModa
         <DialogFooter>
           {step < 3 && (
             <>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={onClose}
                 className="border-[#1a237e] text-[#1a237e] hover:bg-[#1a237e]/10"
               >
